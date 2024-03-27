@@ -26,8 +26,7 @@ function Home() {
         console.log(error);
       });
   }, []);
-  function addtocart(e) {
-    
+  function addtocart(e) {   
     let getId = e.target.id;
     let obj = {};
     obj[getId] = 1;
@@ -38,6 +37,7 @@ function Home() {
       obj = JSON.parse(xx);
   
       Object.keys(obj).map(function (key, index) {
+        console.log(key);
         if (key === getId) {
          
           obj[key] += 1;

@@ -60,6 +60,8 @@ function handleIncrement(e) {
    localStorage.setItem("khanh", JSON.stringify(quantityValues));
  
   }
+
+  
   function handleDecrement(e) {
     let getID = e.target.id;
     console.log(getID);

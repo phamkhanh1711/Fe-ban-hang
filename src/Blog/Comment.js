@@ -4,11 +4,10 @@ import CheckError from "../member/CheckError";
 import axios from "axios";
 
 function Comment(props) {
-  
   const navigate = useNavigate();
 
   const [textarea, setTextarea] = useState({
-    message: ""
+    message: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -33,52 +32,52 @@ function Comment(props) {
     } else {
       setErrors({});
 
-      const idBlog = {props}
-      console.log(idBlog)
+      const idBlog = { props };
+      console.log(idBlog);
 
       let Token = JSON.parse(localStorage.getItem("Token"));
-      console.log(Token)
-      
-      let Auth = JSON.parse(localStorage.getItem("Auth"));
-      console.log(Auth)
-      let url = "http://localhost:8080/laravel8/public/api/blog/comment/" + props.idBlog;
-      console.log(url)
-      
-             
-      let config = { 
-          headers: { 
-          'Authorization': 'Bearer '+ Token,
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
-          } 
-      };	
+      console.log(Token);
 
-      console.log(config)
+      let Auth = JSON.parse(localStorage.getItem("Auth"));
+      console.log(Auth);
+      let url =
+        "http://localhost:8080/laravel8/public/api/blog/comment/" +
+        props.idBlog;
+      console.log(url);
+
+      let config = {
+        headers: {
+          Authorization: "Bearer " + Token,
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+        },
+      };
+
+      console.log(config);
       if (textarea.message) {
         const formData = new FormData();
-         formData.append('id_blog', props.idBlog);
-         formData.append('id_user', Auth.id);
-         formData.append('name_user', Auth.name);
-         formData.append('comment', textarea.message);
-        formData.append('id_comment', 0);
-         formData.append('image_user', Auth.avatar);
-       
-        axios.post(url, formData, config)
-          .then(response => {
+        formData.append("id_blog", props.idBlog);
+        formData.append("id_user", Auth.id);
+        formData.append("name_user", Auth.name);
+        formData.append("comment", textarea.message);
+        formData.append("id_comment", 0);
+        formData.append("image_user", Auth.avatar);
+
+        axios
+          .post(url, formData, config)
+          .then((response) => {
             console.log(response);
-            
           })
-          .catch(error => {
-            console.log(error);                    
+          .catch((error) => {
+            console.log(error);
           });
       }
-   
     }
   }
 
   function renderLogin() {
     var isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
-    
+
     if (isLoggedIn) {
       return (
         <button type="submit" className="btn btn-primary">
