@@ -2,7 +2,7 @@ import { useState } from "react";
 import CheckError from "./CheckError";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "../actions/action";
 
 function Login(props) {
@@ -11,22 +11,21 @@ function Login(props) {
     { id: 2, name: "Member" },
   ];
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    level: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [level, setLevel] = useState("");
 
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const login = useSelector((state) => state.login.login);
+
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    if (name === "email") setEmail(value);
+    else if (name === "password") setPassword(value);
+    else if (name === "level") setLevel(value);
   };
 
   const handleSubmit = (e) => {
@@ -34,14 +33,14 @@ function Login(props) {
     let errorsSubmit = {};
     let flag = true;
 
-    if (!formData.email) {
+    if (!email) {
       errorsSubmit.email = "Vui lòng nhập Email";
       flag = false;
-    } else if (!IsEmail(formData.email)) {
+    } else if (!IsEmail(email)) {
       errorsSubmit.email = "Email không hợp lệ";
       flag = false;
     }
-    if (!formData.password) {
+    if (!password) {
       errorsSubmit.password = "Vui lòng nhập Password";
       flag = false;
     }
@@ -50,22 +49,31 @@ function Login(props) {
       setErrors(errorsSubmit);
       alert("Login Thất bại");
     } else {
-      const data = dispatch(
-        fetchLogin(formData.email, formData.password, formData.level)
-      );
-      localStorage.setItem("isLoggedIn", JSON.stringify({ loggedIn: true }));
+      dispatch(fetchLogin(email, password, level))
+        .then((data) => {
+          localStorage.setItem(
+            "isLoggedIn",
+            JSON.stringify({ loggedIn: true })
+          );
+          if ((data && data.token) || (data && data.Auth)) {
+            // Thực hiện các hành động với token
+            const Token = data.token;
+            console.log(Token);
+            localStorage.setItem("Token", JSON.stringify(Token));
+            const Auth = data.Auth;
+            console.log(Auth);
+            localStorage.setItem("Auth", JSON.stringify(Auth));
 
-      const Token = data.token;
-      console.log(Token);
-      localStorage.setItem("Token", JSON.stringify(Token));
-
-      const Auth = data;
-      console.log(Auth);
-
-      localStorage.setItem("Auth", JSON.stringify(Auth));
-
-      navigate("/blog");
-      alert("Login Thanh Cong");
+            navigate("/blog");
+          } else {
+            // Xử lý khi không có token trong dữ liệu trả về
+            console.error("Không có token trong dữ liệu đăng nhập");
+          }
+        })
+        .catch((error) => {
+          // Xử lý khi có lỗi trong quá trình đăng nhập
+          console.error("Lỗi khi đăng nhập:", error);
+        });
     }
   };
 
@@ -93,15 +101,17 @@ function Login(props) {
             type="email"
             placeholder="Email Address"
             name="email"
+            value={email}
             onChange={handleInput}
           />
           <input
             type="password"
             placeholder="Password...."
             name="password"
+            value={password}
             onChange={handleInput}
           />
-          <select name="level" onChange={handleInput}>
+          <select name="level" value={level} onChange={handleInput}>
             {renderSelect()}
           </select>
           <span>
