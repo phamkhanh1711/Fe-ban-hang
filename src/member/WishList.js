@@ -1,9 +1,4 @@
-function WishList()
-{
-    return(
-        <div>
-            
-        </div>
-    )
+function WishList() {
+  return <div></div>;
 }
-export default  WishList;
+export default WishList;

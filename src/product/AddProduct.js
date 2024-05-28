@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAddProduct, fetchAllBrand } from "../actions/action";
-
+import Button from "react-bootstrap/Button";
 function AddProduct(props) {
   const [getData, setData] = useState([]);
   const [errors, setErrors] = useState({});
@@ -25,10 +25,8 @@ function AddProduct(props) {
   const dispatch = useDispatch();
 
   const addproduct = useSelector((state) => state.addproduct.addproduct);
-  console.log(addproduct);
 
   const brand = useSelector((state) => state.category.brand);
-  console.log(brand);
 
   useEffect(() => {
     dispatch(fetchAllBrand());
@@ -145,7 +143,6 @@ function AddProduct(props) {
             onChange={handleInput}
             value={user.price}
           />
-
           <select
             defaultValue=""
             name="category"
@@ -162,7 +159,6 @@ function AddProduct(props) {
                 </option>
               ))}
           </select>
-
           <select
             placeholder="Please choose Brand ...."
             name="brand"
@@ -188,7 +184,6 @@ function AddProduct(props) {
             <option value={0}>New</option>
             <option value={1}>Sale</option>
           </select>
-
           {user.status === "1" && (
             <input
               type="text"
@@ -205,7 +200,6 @@ function AddProduct(props) {
             name="company"
             value={user.company}
           />
-
           <input type="file" name="avatar" onChange={hanldeFile} />
           <textarea
             name="detail"
@@ -215,9 +209,7 @@ function AddProduct(props) {
             onChange={handleInput}
             value={user.detail}
           />
-          <button type="submit" className="btn btn-default">
-            Signup
-          </button>
+          <Button as="input" type="submit" value="Submit" />
         </form>
         <CheckError errors={errors} />
       </div>

@@ -6,6 +6,7 @@ import { UserContext } from "../UserContext";
 function Cart(props)
 {
   const user  = useContext(UserContext)
+  console.log(user);
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
     let kk = localStorage.getItem("khanh");
@@ -16,7 +17,7 @@ function Cart(props)
     }
 
     axios
-      .post("http://localhost:8080/laravel8/public/api/product/cart", kk)
+      .post("http://localhost:8081/laravel8/public/api/product/cart", kk)
       .then((res) => {
         console.log(res);
         setCartItems(res.data.data);
@@ -35,7 +36,7 @@ function handleIncrement(e) {
 
   let xx = [...cartItems]
   
- 
+ console.log(xx);
     xx.map((value, key) => {
        console.log(value.id)
        console.log(getId)
@@ -50,14 +51,14 @@ function handleIncrement(e) {
      return result;
    }, {});
    console.log(quantityValues);
-   const tongqty = Object.values(quantityValues).reduce(
-    (total, qty) => total + qty,
-    0
-  );
-  user.loginContext(tongqty);
+  const tongqty = Object.values(quantityValues).reduce(
+   (total, qty) => total + qty,
+   0
+   );
+   user.loginContext(tongqty);
 
 
-   localStorage.setItem("khanh", JSON.stringify(quantityValues));
+  localStorage.setItem("khanh", JSON.stringify(quantityValues));
  
   }
 
@@ -100,7 +101,11 @@ function totalAmount(cartItems) {
   }, 0);
 }
 
-
+function AlltotalAmount(cartItems) {
+  return cartItems.reduce((total, item) => {
+    return total + item.qty * item.price;
+  }, 0);
+}
 function handleDelete(item) {
   const updatedCartItems = cartItems.filter((cartItem) => cartItem.id !== item.id);
   setCartItems(updatedCartItems);
@@ -134,7 +139,7 @@ function handleDelete(item) {
                   <a href>
                     <img style={{ width: "200px" }}
                       src={
-                        "http://localhost:8080/laravel8/public/upload/product/" +
+                        "http://localhost:8081/laravel8/public/upload/product/" +
                         item.id_user +
                         "/" +
                         img[0]
@@ -193,7 +198,9 @@ function handleDelete(item) {
          
          <div className="table-responsive cart_info">
           {renderData()}
+          
       </div>
+      <p>Tổng tổng cộng của các mặt hàng: ${AlltotalAmount(cartItems)}</p>
       </div>
        
     )

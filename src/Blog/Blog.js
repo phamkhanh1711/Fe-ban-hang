@@ -41,7 +41,7 @@ function Blog(props) {
           <a href>
             <img
               src={
-                "http://localhost:8080/laravel8/public/upload/Blog/image/" +
+                "http://localhost:8081/laravel8/public/upload/Blog/image/" +
                 value.image
               }
             />

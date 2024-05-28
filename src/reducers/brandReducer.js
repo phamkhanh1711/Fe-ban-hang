@@ -23,7 +23,7 @@ const brandReducer = (state = INITIAL_STATE, action) => {
         brand: action.dataUsers,
       };
     case FETCH_BRAND_ERROR:
-      console.log("FETCH_LOGIN_ERROR", action);
+      console.log("FETCH_BRAND_ERROR", action);
       return {
         ...state,
       };
